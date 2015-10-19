@@ -31,24 +31,48 @@ public class NetworkHandler extends Thread
     }
     /* Sends basic data about this device. Do not call this method!
     */
-    private void sendCommStartUpData ()
+    private void sendCommStartUpData () throws IOException
     {
-        
+        out.writeInt(deviceData.ID);
+        out.writeInt(deviceData.castDeviceCodeToInt(deviceData.deviceCode));
+        out.writeUTF(deviceData.deviceName);
     }
     /*
         Call this method to inform external device about event alarmCode, and
         it's magnitude. Size of magnitude depends upon event Type and can be null
     */
-    public void sendAlarm(int alarmCode, int[]magnitude)
+    public void sendAlarm(int alarmCode, int[]magnitude) throws IOException
     {
-        
+        out.writeInt(1); //sending info about what we will send next
+        out.writeInt(alarmCode);
+        if(magnitude!=null)
+        {
+            out.writeInt(magnitude.length);
+            for(int i=0;i<magnitude.length;i++)
+            {
+                out.writeInt(magnitude[i]);
+            }
+        }else{
+            out.writeInt(0);
+        }
     }
     /*
         Call this method to inform external device about event AlarmEvent
     */
-    public void sendAlarm(AlarmEvent e)
+    public void sendAlarm(AlarmEvent e) throws IOException
     {
-        
+        out.writeInt(1); //sending info about what we will send next
+        out.writeInt(e.castAlarmCodeToInt(e.alarmCode));
+        if(e.magnitude!=null)
+        {
+            out.writeInt(e.magnitude.length);
+            for(int i=0;i<e.magnitude.length;i++)
+            {
+                out.writeInt(e.magnitude[i]);
+            }
+        }else{
+            out.writeInt(0);
+        }
     }
     /*
         If external device sends some data it will be put in buffer. This method
@@ -152,9 +176,7 @@ public class NetworkHandler extends Thread
                 {
                     try{
                         Client(ipAdress,newPort);
-                        out.writeInt(deviceData.ID);
-                        out.writeInt(deviceData.castDeviceCodeToInt(deviceData.deviceCode));
-                        out.writeUTF(deviceData.deviceName);
+                        sendCommStartUpData();
                         noConn=false;
                     }catch(Exception e){
                         Thread.sleep(500);
