@@ -69,10 +69,12 @@ public class NetworkHandler extends Thread
     String ipAdress; 
     int port;
     int []dataBuffer;
+    DeviceData deviceData;
     public NetworkHandler (String ipAdress, int port)
     {
         this.ipAdress=ipAdress;
         this.port=port;
+        deviceData=new DeviceData();
         start();
     }
     private void Client(String hostName,int portNumber) throws IOException
@@ -139,8 +141,31 @@ public class NetworkHandler extends Thread
         {
             try {
                 Client(ipAdress,port);
+                int newPort = in.readInt();
+                /*out.close();
+                out=null;
+                in.close();
+                in=null;*/
+                killconnection();
+                boolean noConn=true;
+                while(noConn)
+                {
+                    try{
+                        Client(ipAdress,newPort);
+                        out.writeInt(deviceData.ID);
+                        out.writeInt(deviceData.castDeviceCodeToInt(deviceData.deviceCode));
+                        out.writeUTF(deviceData.deviceName);
+                        noConn=false;
+                    }catch(Exception e){
+                        Thread.sleep(500);
+                    }
+                }
+                while(true)
+                {
+                    Thread.sleep(2500);
+                }
             } catch (Exception ex) {
-                //Logger.getLogger(NetworkHandler.class.getName()).log(Level.OFF, null, ex);
+                Logger.getLogger(NetworkHandler.class.getName()).log(Level.OFF, null, ex);
             }
             try {
                 Thread.sleep(2500); //Wait a bit and renew connection attempt
