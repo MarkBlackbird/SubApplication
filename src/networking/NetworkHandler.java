@@ -20,14 +20,27 @@ import java.util.logging.Logger;
  */
 public class NetworkHandler extends Thread
 {
+    private boolean connected=false;
     /* Sends echo message through the network, and awaits response. 
-       Returns delay between sending and receiving.
+       Returns delay in millis between sending and receiving.
     */
-    public int sendEcho ()
+    public long sendEcho () throws IOException
     {
         if(out!=null)
+        {
+            long time = System.currentTimeMillis();
             sendData(-1); //echo
-        return 0; //TODO
+            int ID_Received = in.readInt(); //not used
+            time-=System.currentTimeMillis();
+            System.out.println("Echoed for: "+(-time)+" with device "+ID_Received);
+            return -time;
+        }
+        return -1; //Failed
+    }
+    public void sendEchoResponse () throws IOException
+    {
+        out.writeInt(-2);
+        out.writeInt(deviceData.ID);
     }
     /* Sends basic data about this device. Do not call this method!
     */
@@ -43,17 +56,20 @@ public class NetworkHandler extends Thread
     */
     public void sendAlarm(int alarmCode, int[]magnitude) throws IOException
     {
-        out.writeInt(1); //sending info about what we will send next
-        out.writeInt(alarmCode);
-        if(magnitude!=null)
+        if(connected)
         {
-            out.writeInt(magnitude.length);
-            for(int i=0;i<magnitude.length;i++)
+            out.writeInt(1); //sending info about what we will send next
+            out.writeInt(alarmCode);
+            if(magnitude!=null)
             {
-                out.writeInt(magnitude[i]);
+                out.writeInt(magnitude.length);
+                for(int i=0;i<magnitude.length;i++)
+                {
+                    out.writeInt(magnitude[i]);
+                }
+            }else{
+                out.writeInt(0);
             }
-        }else{
-            out.writeInt(0);
         }
     }
     /*
@@ -61,17 +77,20 @@ public class NetworkHandler extends Thread
     */
     public void sendAlarm(AlarmEvent e) throws IOException
     {
-        out.writeInt(1); //sending info about what we will send next
-        out.writeInt(e.castAlarmCodeToInt(e.alarmCode));
-        if(e.magnitude!=null)
+        if(connected)
         {
-            out.writeInt(e.magnitude.length);
-            for(int i=0;i<e.magnitude.length;i++)
+            out.writeInt(1); //sending info about what we will send next
+            out.writeInt(e.castAlarmCodeToInt(e.alarmCode));
+            if(e.magnitude!=null)
             {
-                out.writeInt(e.magnitude[i]);
+                out.writeInt(e.magnitude.length);
+                for(int i=0;i<e.magnitude.length;i++)
+                {
+                    out.writeInt(e.magnitude[i]);
+                }
+            }else{
+                out.writeInt(0);
             }
-        }else{
-            out.writeInt(0);
         }
     }
     /*
@@ -182,8 +201,48 @@ public class NetworkHandler extends Thread
                         Thread.sleep(500);
                     }
                 }
+                connected=true;
                 while(true)
                 {
+                    int number = 0;
+                    try {
+                         number = in.readInt();
+                        String str;
+                        switch(number)
+                        {
+                             case 1: //next is int
+                            {
+                                int alarmType = in.readInt(); //Type of alarm
+                                int magLength = in.readInt(); //length of maginitude
+                                int[] magnitude = new int[magLength];
+                                for(int i=0;i<magLength;i++)
+                                {
+                                    magnitude[i]=in.readInt();
+                                }
+                                //alarmList.add(new AlarmEvent(AlarmEvent.castIntToAlarmCode(alarmType),magnitude));
+                                break;
+                            }
+                            case 2: //next is String, Right now not used
+                            {
+                                str = in.readUTF();
+                        
+                                break;
+                            }
+                            case -1: //next is echo request
+                            {
+                                sendEchoResponse ();
+                        
+                                break;
+                            }
+                            case -2:
+                            {
+                                
+                                break;
+                            }
+                        }
+                    } catch (IOException ex) {
+                        Logger.getLogger(NetworkHandler.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     Thread.sleep(2500);
                 }
             } catch (Exception ex) {
