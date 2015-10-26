@@ -5,7 +5,13 @@
  */
 package subapplication;
 
+import java.io.IOException;
 import networking.NetworkHandler;
+import java.nio.file.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.List;
+
 
 /**
  *
@@ -17,7 +23,16 @@ public class SubApplication {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        NetworkHandler nh = new NetworkHandler("127.0.0.1",10800);
+        List<String> filecontent = null;
+        try{
+            filecontent = Files.readAllLines(FileSystems.getDefault().getPath("resolv.txt"));
+        } catch (IOException ex){
+            Logger.getLogger(NetworkHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        String netinfo[] = filecontent.get(0).split("\\s+");
+        NetworkHandler nh = new NetworkHandler(netinfo[0], Integer.parseInt(netinfo[1]));
+        AlarmGenerator gen = new AlarmGenerator(nh);
+        gen.createAndShowGUI();
     }
     
 }

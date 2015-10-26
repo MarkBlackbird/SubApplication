@@ -42,6 +42,13 @@ public class AlarmEvent {
         alarmCode=ac;
         magnitude=mag;
     }
+    
+    //not necessary: each enum element in Java has a number assigned by default, i.e.
+    //the following statement is true: AlarmCode.UNKNOWN == 0
+    //and it's possible to reverse lookup the alarm codes without writing custom methods,
+    //e.g. if we do sth like this: AlarmCode[] alarms = AlarmCode.values(); then the following
+    //statements are true: values[0] == AlarmCode.UNKNOWN; values[1] == AlarmCode.TEMPERATURE;
+    //etc.
     public AlarmCode castIntToAlarmCode(int num)
     {
         switch(num)
@@ -169,6 +176,8 @@ public class AlarmEvent {
         }
     }
     
+    //method not necessary: each enum element in Java has a number assigned by default, i.e.
+    //the following statement is true: AlarmCode.UNKNOWN == 0
     public int castAlarmCodeToInt(AlarmCode devCode)
     {
         switch(devCode)
