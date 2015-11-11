@@ -18,7 +18,7 @@ public class AlarmEvent {
         SATURATION, BODY_TEMPERATURE, PATIENT_ELECTROCUTTED, ABNORMAL_ECG,
         ABNORMAL_EEG, ABNORMAL_EOG, ABNORMAL_EMG, CRITICAL_DEVICE_FAILURE,
         RISK_OF_DEATH, DEATH, LONG_DELAY, DEVICE_DISCONNECTED_BY_USER,
-        PATIENT_ASKS_FOR_ASSISTANCE
+        PATIENT_ASKS_FOR_ASSISTANCE, LOST
     }
     int [] magnitude;
     AlarmCode alarmCode;
@@ -42,7 +42,7 @@ public class AlarmEvent {
         alarmCode=ac;
         magnitude=mag;
     }
-<<<<<<< HEAD
+//<<<<<<< HEAD
     
     //not necessary: each enum element in Java has a number assigned by default, i.e.
     //the following statement is true: AlarmCode.UNKNOWN == 0
@@ -50,10 +50,10 @@ public class AlarmEvent {
     //e.g. if we do sth like this: AlarmCode[] alarms = AlarmCode.values(); then the following
     //statements are true: values[0] == AlarmCode.UNKNOWN; values[1] == AlarmCode.TEMPERATURE;
     //etc.
-    public AlarmCode castIntToAlarmCode(int num)
-=======
+    //public AlarmCode castIntToAlarmCode(int num)
+//=======
     public static AlarmCode castIntToAlarmCode(int num)
->>>>>>> origin/master
+//>>>>>>> origin/master
     {
         switch(num)
         {
@@ -173,6 +173,10 @@ public class AlarmEvent {
             {
                 return AlarmCode.PATIENT_ASKS_FOR_ASSISTANCE;
             }
+            case 29:
+            {
+                return AlarmCode.LOST;
+            }
             default:
             {
                 return AlarmCode.UNKNOWN;
@@ -180,13 +184,13 @@ public class AlarmEvent {
         }
     }
     
-<<<<<<< HEAD
+//<<<<<<< HEAD
     //method not necessary: each enum element in Java has a number assigned by default, i.e.
     //the following statement is true: AlarmCode.UNKNOWN == 0
-    public int castAlarmCodeToInt(AlarmCode devCode)
-=======
+    //public int castAlarmCodeToInt(AlarmCode devCode)
+//=======
     public static int castAlarmCodeToInt(AlarmCode devCode)
->>>>>>> origin/master
+//>>>>>>> origin/master
     {
         switch(devCode)
         {
@@ -305,6 +309,10 @@ public class AlarmEvent {
             case PATIENT_ASKS_FOR_ASSISTANCE:
             {
                 return 28;
+            }
+            case LOST:
+            {
+                return 29;
             }
             default:
             {
