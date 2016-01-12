@@ -241,17 +241,17 @@ public class NetworkHandler extends Thread
                             }
                         }
                     } catch (IOException ex) {
-                        Logger.getLogger(NetworkHandler.class.getName()).log(Level.SEVERE, null, ex);
+                        //Logger.getLogger(NetworkHandler.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     Thread.sleep(2500);
                 }
             } catch (Exception ex) {
-                Logger.getLogger(NetworkHandler.class.getName()).log(Level.OFF, null, ex);
+                //Logger.getLogger(NetworkHandler.class.getName()).log(Level.OFF, null, ex);
             }
             try {
                 Thread.sleep(2500); //Wait a bit and renew connection attempt
             } catch (InterruptedException ex) {
-                Logger.getLogger(NetworkHandler.class.getName()).log(Level.SEVERE, null, ex);
+                //Logger.getLogger(NetworkHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
