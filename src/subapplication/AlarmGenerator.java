@@ -5,6 +5,7 @@
 package subapplication;
 import networking.*;
 import java.io.IOException;
+import java.util.concurrent.ThreadLocalRandom;
 
 //GUI
 import java.awt.Color;
@@ -54,6 +55,19 @@ public class AlarmGenerator implements  ActionListener{
         
         totalGUI.setOpaque(true);
         return totalGUI;
+    }
+    
+    //niedokończone - na razie bzdury:
+    private void generateRandomAlarm()
+    {
+        AlarmEvent.AlarmCode alarms[] = AlarmEvent.AlarmCode.values();
+        
+        int alarmId = ThreadLocalRandom.current().nextInt(0, alarms.length);
+        try{
+            nethandler.sendAlarm(new AlarmEvent(alarms[alarmId]));
+        } catch (IOException ex){
+            Logger.getLogger(NetworkHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override

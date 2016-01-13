@@ -28,6 +28,13 @@ public class DeviceData {
         deviceName="Name";
         ID=0; //Not valid. Needs adjustment
     }
+    public DeviceData(int id, String devname, int devcode)
+    {
+        this.ID = id;
+        this.deviceName = devname;
+        this.deviceCode = castIntToDeviceCode(devcode);
+    }
+    
     public DeviceCode castIntToDeviceCode(int num)
     {
         switch(num)

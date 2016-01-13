@@ -113,11 +113,11 @@ public class NetworkHandler extends Thread
     int port;
     int []dataBuffer;
     DeviceData deviceData;
-    public NetworkHandler (String ipAdress, int port)
+    public NetworkHandler (String ipAdress, int port, DeviceData dev)
     {
         this.ipAdress=ipAdress;
         this.port=port;
-        deviceData=new DeviceData();
+        this.deviceData=dev;
         start();
     }
     private void Client(String hostName,int portNumber) throws IOException
