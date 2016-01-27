@@ -5,6 +5,7 @@
  */
 package networking;
 
+import exceptions.GUIException;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
@@ -180,15 +181,15 @@ public class NetworkHandler extends Thread
     @Override
     public void run()
     {
-        while(true)
-        {
+        try{
+            while(true)
+            {
             try {
                 Client(ipAdress,port);
                 int newPort = in.readInt();
-                /*out.close();
-                out=null;
-                in.close();
-                in=null;*/
+                if(newPort==65536)
+                    throw new GUIException
+                ("Serwer odmówił połączenia za względu na błędną konfigurację");
                 killconnection();
                 boolean noConn=true;
                 while(noConn)
@@ -196,8 +197,13 @@ public class NetworkHandler extends Thread
                     try{
                         Client(ipAdress,newPort);
                         sendCommStartUpData();
+                        if(in.readInt()<1)
+                            throw new GUIException
+                ("Serwer odmówił połączenia za względu na błędną konfigurację");
                         noConn=false;
                     }catch(Exception e){
+                        if(e.getClass()==GUIException.class)
+                            throw e;
                         Thread.sleep(500);
                     }
                 }
@@ -245,14 +251,18 @@ public class NetworkHandler extends Thread
                     }
                     Thread.sleep(2500);
                 }
-            } catch (Exception ex) {
-                //Logger.getLogger(NetworkHandler.class.getName()).log(Level.OFF, null, ex);
+            } catch (Exception e) {
+                if(e.getClass()==GUIException.class)
+                    throw e;
             }
             try {
                 Thread.sleep(2500); //Wait a bit and renew connection attempt
             } catch (InterruptedException ex) {
                 //Logger.getLogger(NetworkHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
+            }
+        }catch(Exception e){
+        
         }
     }
 }
