@@ -5,7 +5,7 @@
  */
 package networking;
 
-import exceptions.GUIException;
+import networking.GUIException;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
