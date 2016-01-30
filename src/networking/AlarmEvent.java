@@ -42,6 +42,22 @@ public class AlarmEvent {
         alarmCode=ac;
         magnitude=mag;
     }
+    public void setAlarmCode(AlarmCode ac)
+    {
+        this.alarmCode = ac;
+    }
+    public void setMagnitude(int[] mag)
+    {
+        this.magnitude = mag;
+    }
+    public AlarmCode getAlarmCode()
+    {
+        return this.alarmCode;
+    }
+    public int[] getMagnitude()
+    {
+        return this.magnitude;
+    }
 //<<<<<<< HEAD
     
     //not necessary: each enum element in Java has a number assigned by default, i.e.

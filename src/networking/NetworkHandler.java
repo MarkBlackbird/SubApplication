@@ -76,6 +76,7 @@ public class NetworkHandler extends Thread
     /*
         Call this method to inform external device about event AlarmEvent
     */
+    
     public void sendAlarm(AlarmEvent e) throws IOException
     {
         if(connected)
